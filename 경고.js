@@ -2,14 +2,14 @@ const j = '!';
 
 const FS = FileStream;
 
-const WarningPath = '/sdcard/Life/WarningData.json';
+const WarningPath = '/sdcard/WarningData.json';
 
 const Devs = ["헤드샷", "김양파"];
 
 // 경고 기능 초기화: 파일이 없으면 생성
 if(!FS.read(WarningPath)) FS.write(WarningPath, JSON.stringify([], null, 4));
 
-function responseFix(room, msg, sender, isGroupChat, replier, imageDB, packageName){
+function response(room, msg, sender, isGroupChat, replier, imageDB, packageName){
   if(!msg.startsWith(j)) return;
   
   let Warnings = JSON.parse(FS.read(WarningPath));
@@ -17,7 +17,7 @@ function responseFix(room, msg, sender, isGroupChat, replier, imageDB, packageNa
   msg = msg.slice(j.length);
 
   // 경고 확인 명령어
-  if(msg === '경고'){
+  if(msg === '경고수'){
     let userWarning = Warnings.find(x => x.Name === sender);
     if(!userWarning){
       replier.reply(sender + '님은 경고가 없습니다.');
@@ -29,8 +29,8 @@ function responseFix(room, msg, sender, isGroupChat, replier, imageDB, packageNa
   }
 
     // 경고 확인 명령어
-  if(msg.startsWith('경고 ')){
-    let Target = msg.slice(3);
+  if(/^경고수 @?(.+)$/.test(msg){
+    let Target = RegExp.$1.trim();
     let userWarning = Warnings.find(x => x.Name === Target);
     if(!userWarning){
       replier.reply(Target + '님은 경고가 없습니다.');
